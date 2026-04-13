@@ -206,8 +206,8 @@ export default function CentreDashboard() {
   const OverviewSection = () => {
     const totalStudents = overview?.totalStudents ?? data.profiles.length;
     const weakSubject   = weakSubjectFromPerformance ?? overview?.weakSubject ?? 'N/A';
-    const avgScore      = topRanked.length
-      ? Math.round(topRanked.reduce((s, r) => s + r.marks, 0) / topRanked.length)
+    const avgScore      = allRanked.length
+      ? Math.round(allRanked.reduce((s, r) => s + r.marks, 0) / allRanked.length)
       : 0;
     const topScore = topRanked.length ? topRanked[0]?.marks ?? 0 : 0;
 
