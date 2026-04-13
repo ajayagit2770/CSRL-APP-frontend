@@ -135,8 +135,8 @@ function resolveApiBase() {
 
   if (typeof window !== 'undefined') {
     const host = window.location.hostname;
-    if (host.endsWith('.vercel.app')) {
-      return 'https://csrl-backend.onrender.com/api';
+    if (host.endsWith('.vercel.app') || host !== 'localhost') {
+      return 'https://csrl-app-backed.onrender.com/api';
     }
   }
 
