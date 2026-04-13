@@ -134,7 +134,13 @@ function resolveApiBase() {
   if (envBase) return envBase.replace(/\/$/, '');
 
   if (typeof window !== 'undefined') {
-    const host = window.location.hostname;
+    const proto = window.location.protocol;
+    const host  = window.location.hostname;
+    // Capacitor uses capacitor:// or ionic:// scheme — always use the remote backend
+    if (proto === 'capacitor:' || proto === 'ionic:' || proto === 'file:') {
+      return 'https://csrl-app-backed.onrender.com/api';
+    }
+    // Vercel deployment or any non-localhost host
     if (host.endsWith('.vercel.app') || host !== 'localhost') {
       return 'https://csrl-app-backed.onrender.com/api';
     }
