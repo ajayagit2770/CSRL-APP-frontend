@@ -656,12 +656,11 @@ export default function AdminDashboard() {
       { Icon: Users,         value: totalStudents,                      label: 'Total Students',     bg: '#e8f0fc', color: '#1a4fa0' },
       { Icon: Building2,     value: Math.max(0, centersList.length - 1), label: 'Active Centres',    bg: '#fff3e0', color: '#b45309' },
       { Icon: FileText,      value: data?.tests?.length || 0,           label: 'Marks Entries',      bg: '#e6f5ed', color: '#1a6e3b' },
-      { Icon: AlertTriangle, value: weakSubject,                        label: 'Global Weak Subject', bg: '#fdecea', color: '#c0392b' },
     ];
 
     return (
       <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
-        <div className="grid-4">
+        <div className="grid-3">
           {statCards.map((card) => {
             const CardIcon = card.Icon;
             return (
