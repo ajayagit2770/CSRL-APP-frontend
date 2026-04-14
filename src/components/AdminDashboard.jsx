@@ -30,6 +30,7 @@ import TestDataModal from './TestDataModal';
 import CentreLeaderboard from './CentreLeaderboard';
 import TestInsightsPanel from './TestInsightsPanel';
 import AdminWeakTopics from './AdminWeakTopics';
+import UploadMarksAwardSheetModal from './UploadMarksAwardSheetModal';
 
 // ── Constants ─────────────────────────────────────────────────────────────────
 
@@ -204,6 +205,7 @@ export default function AdminDashboard() {
   const [modalMode,    setModalMode]    = useState(null);
   const [modalStudent, setModalStudent] = useState(null);
   const [modalLoading, setModalLoading] = useState(false);
+  const [showMarksAwardModal, setShowMarksAwardModal] = useState(false);
 
   const [importMode,    setImportMode]    = useState(null);
   const [uploadPreview, setUploadPreview] = useState([]);
@@ -1110,6 +1112,9 @@ export default function AdminDashboard() {
   return (
     <div className="fade-in dashboard-page">
       {/* Modals */}
+      {showMarksAwardModal && (
+        <UploadMarksAwardSheetModal onClose={() => setShowMarksAwardModal(false)} />
+      )}
       {(modalMode === 'add' || modalMode === 'edit') && (
         <StudentFormModal mode={modalMode} student={modalStudent} loading={modalLoading} onClose={() => setModalMode(null)} onSubmit={modalMode === 'add' ? handleAddStudent : handleEditStudent} />
       )}
@@ -1208,6 +1213,7 @@ export default function AdminDashboard() {
           </button>
           <button type="button" className="btn btn-warning btn-sm" onClick={() => openImportModal('marks')}><Upload size={13} /> Marks</button>
           <button type="button" className="btn btn-purple btn-sm" onClick={() => openImportModal('students')}><Users size={13} /> Upload Students</button>
+          <button type="button" className="btn btn-purple btn-sm" style={{ background: '#6d28d9' }} onClick={() => setShowMarksAwardModal(true)}><Upload size={13} /> Upload Marks Award Sheet</button>
           <button type="button" className="btn btn-outline btn-sm" onClick={handleAddNewTestOption}>+ New Test</button>
           <select
             className="input select"
