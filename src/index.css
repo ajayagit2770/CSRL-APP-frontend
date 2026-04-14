@@ -626,22 +626,19 @@ input, select, textarea {
 
   .table-compact th:nth-child(2),
   .table-compact td:nth-child(2) {
-    width: 1%;
+    min-width: 90px;
+    max-width: 110px;
     white-space: normal;
   }
   
-  /* Truncate the student name so it doesn't push columns horizontally */
+  /* Let student name inherently wrap by space onto new lines cleanly */
   .table-compact td:nth-child(2) .student-row > div:nth-child(2) > div:first-child {
     max-width: 110px;
     white-space: normal;
-    overflow-wrap: anywhere;
+    word-wrap: normal;
+    word-break: normal;
   }
 
-  .table-compact th:nth-child(3),
-  .table-compact td:nth-child(3) {
-    width: 1%;
-    white-space: nowrap;
-  }
   
   /* Make the centre badge highly compact */
   .table-compact .badge {

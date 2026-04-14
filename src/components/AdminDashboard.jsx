@@ -918,7 +918,7 @@ export default function AdminDashboard() {
       <table className="table table-compact">
         <thead>
           <tr>
-            <th>#</th><th>Student</th><th>Centre</th>
+            <th>#</th><th>Student</th><th>Centre</th><th>Cat.</th>
             {allSubjects.map((s) => {
               const abbr = s === 'Physics' ? 'P' : s === 'Chemistry' ? 'C' : (s === 'Math' || s === 'Mathematics') ? 'M' : s === 'Biology' ? 'B' : s.substring(0, 3);
               return <th key={s} title={s}>{abbr}</th>;
@@ -951,6 +951,9 @@ export default function AdminDashboard() {
                 <td>
                   <span className="badge" style={{ background: '#e8f0fc', color: '#1a4fa0', fontSize: 10 }}>{m.center}</span>
                 </td>
+                <td>
+                  <span style={{ fontSize: 10, padding: '2px 5px', borderRadius: 4, background: '#f5f5f5', color: '#666', fontWeight: 600 }}>{profile?.CATEGORY || '—'}</span>
+                </td>
                 {allSubjects.map((sub) => (
                   <td key={sub} style={{ color: flatM.subjects[sub] === undefined ? 'var(--gray-200)' : 'inherit' }}>
                     {flatM.subjects[sub] ?? '—'}
@@ -978,7 +981,7 @@ export default function AdminDashboard() {
       <table className="table table-compact">
         <thead>
           <tr>
-            <th>Rank</th><th>Student</th><th>Centre</th>
+            <th>Rank</th><th>Student</th><th>Centre</th><th>Cat.</th>
             {allSubjects.map((s) => {
               const abbr = s === 'Physics' ? 'P' : s === 'Chemistry' ? 'C' : (s === 'Math' || s === 'Mathematics') ? 'M' : s === 'Biology' ? 'B' : s.substring(0, 3);
               return <th key={s} title={s}>{abbr}</th>;
@@ -1009,6 +1012,9 @@ export default function AdminDashboard() {
               </td>
               <td>
                 <span className="badge" style={{ background: '#e8f0fc', color: '#1a4fa0', fontSize: 10 }}>{m.center}</span>
+              </td>
+              <td>
+                <span style={{ fontSize: 10, padding: '2px 5px', borderRadius: 4, background: '#f5f5f5', color: '#666', fontWeight: 600 }}>{profile?.CATEGORY || '—'}</span>
               </td>
               {allSubjects.map((sub) => (
                 <td key={sub} style={{ color: flatM.subjects[sub] === undefined ? 'var(--gray-200)' : 'inherit' }}>

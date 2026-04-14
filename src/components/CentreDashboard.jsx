@@ -296,7 +296,7 @@ export default function CentreDashboard() {
         <table className="table table-compact">
           <thead>
             <tr>
-              <th>#</th><th>Student</th>
+              <th>#</th><th>Student</th><th>Cat.</th>
               {rankingSubjects.map((s) => {
                 const abbr = s === 'Physics' ? 'P' : s === 'Chemistry' ? 'C' : (s === 'Math' || s === 'Mathematics') ? 'M' : s === 'Biology' ? 'B' : s.substring(0, 3);
                 return <th key={s} title={s}>{abbr}</th>;
@@ -325,6 +325,9 @@ export default function CentreDashboard() {
                         <div style={{ fontSize: 10, color: 'var(--gray-400)' }}>{s.roll}</div>
                       </div>
                     </div>
+                  </td>
+                  <td>
+                    <span style={{ fontSize: 10, padding: '2px 5px', borderRadius: 4, background: '#f5f5f5', color: '#666', fontWeight: 600 }}>{profile?.CATEGORY || '—'}</span>
                   </td>
                   {rankingSubjectCols.map((col, idx) => {
                     const raw = testDoc[col];
@@ -356,7 +359,7 @@ export default function CentreDashboard() {
         <table className="table table-compact">
           <thead>
             <tr>
-              <th>Rank</th><th>Student</th>
+              <th>Rank</th><th>Student</th><th>Cat.</th>
               {rankingSubjects.map((s) => {
                 const abbr = s === 'Physics' ? 'P' : s === 'Chemistry' ? 'C' : (s === 'Math' || s === 'Mathematics') ? 'M' : s === 'Biology' ? 'B' : s.substring(0, 3);
                 return <th key={s} title={s}>{abbr}</th>;
@@ -384,6 +387,9 @@ export default function CentreDashboard() {
                       <div style={{ fontSize: 10, color: 'var(--gray-400)' }}>{s.roll}</div>
                     </div>
                   </div>
+                </td>
+                <td>
+                  <span style={{ fontSize: 10, padding: '2px 5px', borderRadius: 4, background: '#fdecea', color: 'var(--red)', fontWeight: 600 }}>{profile?.CATEGORY || '—'}</span>
                 </td>
                 {rankingSubjectCols.map((col, idx) => {
                   const raw = testDoc[col];
