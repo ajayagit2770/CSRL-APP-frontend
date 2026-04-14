@@ -308,12 +308,18 @@ export default function CentreDashboard() {
             {topRanked.map((s) => {
               const testDoc = data?.tests?.find(t => t.ROLL_KEY === s.roll) || {};
               const rankColor = s.rank === 1 ? '#d97706' : s.rank === 2 ? '#6b7280' : s.rank === 3 ? '#c2410c' : 'inherit';
+              const profile = profileByRoll.get(s.roll);
+              const photoUrl = profile?.['STUDENT PHOTO URL'] ? resolveStudentPhotoUrl(profile['STUDENT PHOTO URL'], 'fallback') : null;
               return (
                 <tr key={s.roll} style={{ cursor: 'pointer' }} onClick={() => setViewingStudentId(s.roll)}>
                   <td><span style={{ fontWeight: 800, color: rankColor }}>{s.rank}</span></td>
                   <td>
                     <div className="student-row">
-                      <div className="avatar" style={{width: 32, height: 32, fontSize: 12}}>{getInitials(s.name)}</div>
+                      {photoUrl ? (
+                        <img src={photoUrl} alt="Avatar" className="avatar" style={{width: 32, height: 32, fontSize: 12, objectFit: 'cover'}} />
+                      ) : (
+                        <div className="avatar" style={{width: 32, height: 32, fontSize: 12}}>{getInitials(s.name)}</div>
+                      )}
                       <div>
                         <div style={{ fontWeight: 600, fontSize: 12 }}>{s.name}</div>
                         <div style={{ fontSize: 10, color: 'var(--gray-400)' }}>{s.roll}</div>
@@ -361,12 +367,18 @@ export default function CentreDashboard() {
           <tbody>
             {bottomRanked.map((s) => {
               const testDoc = data?.tests?.find(t => t.ROLL_KEY === s.roll) || {};
+              const profile = profileByRoll.get(s.roll);
+              const photoUrl = profile?.['STUDENT PHOTO URL'] ? resolveStudentPhotoUrl(profile['STUDENT PHOTO URL'], 'fallback') : null;
               return (
               <tr key={s.roll} style={{ cursor: 'pointer' }} onClick={() => setViewingStudentId(s.roll)}>
                 <td style={{ color: 'var(--red)', fontWeight: 700 }}>#{s.rank}</td>
                 <td>
                   <div className="student-row">
-                    <div className="avatar" style={{ background: '#fdecea', color: 'var(--red)', width: 32, height: 32, fontSize: 12 }}>{getInitials(s.name)}</div>
+                    {photoUrl ? (
+                      <img src={photoUrl} alt="Avatar" className="avatar" style={{width: 32, height: 32, fontSize: 12, objectFit: 'cover'}} />
+                    ) : (
+                      <div className="avatar" style={{ background: '#fdecea', color: 'var(--red)', width: 32, height: 32, fontSize: 12 }}>{getInitials(s.name)}</div>
+                    )}
                     <div>
                       <div style={{ fontWeight: 600, fontSize: 12 }}>{s.name}</div>
                       <div style={{ fontSize: 10, color: 'var(--gray-400)' }}>{s.roll}</div>
