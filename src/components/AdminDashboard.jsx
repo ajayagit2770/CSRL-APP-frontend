@@ -1247,7 +1247,7 @@ export default function AdminDashboard() {
           {activePage === 'marks'       && <MarksSection />}
           {activePage === 'import'      && <ImportExportSection />}
           {activePage === 'ranking'     && <RankingsSection />}
-          {activePage === 'weaktopics'  && <AdminWeakTopics />}
+          {activePage === 'weaktopics'  && <AdminWeakTopics centersList={centersList} selectedTestKey={selectedTestKey} />}
           {activePage === 'insights' && (
             <TestInsightsPanel
               insights={testInsights}
