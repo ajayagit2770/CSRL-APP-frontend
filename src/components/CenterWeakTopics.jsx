@@ -141,12 +141,10 @@ export default function CenterWeakTopics({ centerId, activeTestKey }) {
         <span style={{ display: 'inline-flex', alignItems: 'center', gap: 5 }}>
           <span style={{ width: 10, height: 10, borderRadius: '50%', background: '#c0392b', display: 'inline-block' }} />
           <strong style={{ color: '#c0392b' }}>Strong Weak</strong>
-          <span style={{ color: 'var(--gray-500)' }}>(≥50% students)</span>
         </span>
         <span style={{ display: 'inline-flex', alignItems: 'center', gap: 5 }}>
           <span style={{ width: 10, height: 10, borderRadius: '50%', background: '#b45309', display: 'inline-block' }} />
           <strong style={{ color: '#b45309' }}>Medium Weak</strong>
-          <span style={{ color: 'var(--gray-500)' }}>(≥30% and &lt;50% students)</span>
         </span>
       </div>
 
