@@ -621,22 +621,30 @@ input, select, textarea {
   .table-compact th, 
   .table-compact td { padding: 5px 6px !important; font-size: 11px !important; }
   
-  /* Pack all columns tightly by default */
+  /* Pack columns appropriately for horizontal scroll */
   .table-compact th:not(:nth-child(2)),
   .table-compact td:not(:nth-child(2)) {
-    width: 1%;
+    min-width: 35px;
+    text-align: center;
     white-space: nowrap;
+  }
+
+  /* Specific width for Category column (usually 3rd or 4th) */
+  .table-compact th:nth-child(3),
+  .table-compact td:nth-child(3) {
+    min-width: 50px;
   }
 
   /* Allow the student column to naturally wrap without mid-word breaks */
   .table-compact th:nth-child(2),
   .table-compact td:nth-child(2) {
     width: auto;
-    min-width: 90px;
+    min-width: 100px;
+    text-align: left;
   }
   
   .table-compact td:nth-child(2) .student-row > div:nth-child(2) > div:first-child {
-    max-width: 90px;
+    max-width: 100px;
     white-space: normal;
     word-break: normal;
     word-wrap: normal;
@@ -645,7 +653,7 @@ input, select, textarea {
 
   /* Force the table to be wider than the phone screen to enable 'left slide' horizontal scrolling */
   .table-wrap .table-compact {
-    min-width: 580px;
+    min-width: 650px;
     width: 100%;
   }
 

@@ -421,7 +421,7 @@ export default function CentreDashboard() {
           <table className="table table-compact">
             <thead>
               <tr>
-                <th>Rank</th><th>Student</th><th>Stream</th>
+                <th>Rank</th><th>Student</th><th>Cat.</th><th>Stream</th>
                 {rankingSubjects.map((s) => {
                   const abbr = s === 'Physics' ? 'P' : s === 'Chemistry' ? 'C' : (s === 'Math' || s === 'Mathematics') ? 'M' : s === 'Biology' ? 'B' : s.substring(0, 3);
                   return <th key={s} title={s}>{abbr}</th>;
@@ -445,6 +445,9 @@ export default function CentreDashboard() {
                       )}
                       <span style={{ fontWeight: 600, fontSize: 13 }}>{s.name}</span>
                     </div>
+                  </td>
+                  <td>
+                    <span style={{ fontSize: 10, padding: '2px 5px', borderRadius: 4, background: '#f5f5f5', color: '#666', fontWeight: 600 }}>{profile?.CATEGORY || '—'}</span>
                   </td>
                   <td>
                     <span style={{ fontSize: 11, padding: '2px 6px', borderRadius: 3, background: s.stream === 'NEET' ? '#e6f5ed' : '#e8f0fc', color: s.stream === 'NEET' ? '#1a6e3b' : '#1a4fa0', fontWeight: 600 }}>
