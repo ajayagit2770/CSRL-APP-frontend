@@ -619,24 +619,27 @@ input, select, textarea {
   .table th,
   .table td { padding: 8px 10px; font-size: 13px; }
   .table-compact th, 
-  .table-compact td { padding: 4px 6px !important; font-size: 11px !important; }
+  .table-compact td { padding: 5px 6px !important; font-size: 11px !important; }
   
-  .table-compact th:nth-child(1),
-  .table-compact td:nth-child(1) { width: 1%; white-space: nowrap; }
+  /* Pack all columns tightly by default */
+  .table-compact th:not(:nth-child(2)),
+  .table-compact td:not(:nth-child(2)) {
+    width: 1%;
+    white-space: nowrap;
+  }
 
+  /* Allow the student column to naturally wrap without mid-word breaks */
   .table-compact th:nth-child(2),
   .table-compact td:nth-child(2) {
-    min-width: 90px;
-    max-width: 110px;
+    width: auto;
     white-space: normal;
   }
   
-  /* Let student name inherently wrap by space onto new lines cleanly */
   .table-compact td:nth-child(2) .student-row > div:nth-child(2) > div:first-child {
-    max-width: 110px;
+    max-width: 140px;
     white-space: normal;
-    word-wrap: normal;
     word-break: normal;
+    word-wrap: normal;
   }
 
   
