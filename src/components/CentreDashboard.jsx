@@ -1,6 +1,6 @@
 import { useState, useEffect, useMemo } from 'react';
 import { useOutletContext } from 'react-router-dom';
-import { LayoutDashboard, Trophy, Users, AlertTriangle, BarChart2, BarChart3, TrendingUp, Building2, ArrowLeft, Loader2, Search, Eye } from 'lucide-react';
+import { LayoutDashboard, Trophy, Users, AlertTriangle, BarChart2, BarChart3, TrendingUp, Building2, ArrowLeft, Loader2, Search, Eye, Brain } from 'lucide-react';
 import {
   fetchCenterDataApi,
   fetchOverview,
@@ -14,12 +14,14 @@ import { useAuth } from '../context/AuthContext';
 import StudentProfileView from './StudentProfileView';
 import { CENTERS } from '../config/centers';
 import TestInsightsPanel from './TestInsightsPanel';
+import CenterWeakTopics from './CenterWeakTopics';
 
 const TABS = [
-  { key: 'overview',  Icon: LayoutDashboard, label: 'Overview'  },
-  { key: 'topbottom', Icon: Trophy,          label: 'Rankings'  },
-  { key: 'insights',  Icon: BarChart3,       label: 'Test analysis' },
-  { key: 'students',  Icon: Users,           label: 'Students'  },
+  { key: 'overview',   Icon: LayoutDashboard, label: 'Overview'  },
+  { key: 'topbottom',  Icon: Trophy,          label: 'Rankings'  },
+  { key: 'insights',   Icon: BarChart3,       label: 'Test analysis' },
+  { key: 'students',   Icon: Users,           label: 'Students'  },
+  { key: 'weaktopics', Icon: Brain,           label: 'Weak Topics' },
 ];
 
 function getInitials(name = '') {
@@ -589,7 +591,7 @@ export default function CentreDashboard() {
         </div>
 
         <div className="dashboard-scroll">
-          {activePage === 'overview'  && <OverviewSection />}
+          {activePage === 'overview'   && <OverviewSection />}
           {activePage === 'insights' && (
             <TestInsightsPanel
               insights={testInsights}
@@ -599,8 +601,9 @@ export default function CentreDashboard() {
               testKey={selectedTestKey}
             />
           )}
-          {activePage === 'topbottom' && <RankingsPair />}
-          {activePage === 'students'  && <StudentsSection />}
+          {activePage === 'topbottom'  && <RankingsPair />}
+          {activePage === 'students'   && <StudentsSection />}
+          {activePage === 'weaktopics' && <CenterWeakTopics centerId={auth.centerCode} />}
         </div>
       </div>
     </div>

@@ -1,7 +1,7 @@
 import { useState, useEffect, useMemo } from 'react';
 import { useOutletContext } from 'react-router-dom';
 import { LineChart, Line, XAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
-import { User, BarChart2, BarChart3, AlertTriangle, Loader2 } from 'lucide-react';
+import { User, BarChart2, BarChart3, AlertTriangle, Loader2, Brain } from 'lucide-react';
 import {
   fetchStudentData,
   fetchStudentChart,
@@ -15,11 +15,13 @@ import {
 } from '../services/dataService';
 import { useAuth } from '../context/AuthContext';
 import TestInsightsPanel from './TestInsightsPanel';
+import StudentWeakTopics from './StudentWeakTopics';
 
 const TABS = [
   { key: 'profile',     Icon: User,          label: 'Profile'     },
   { key: 'performance', Icon: BarChart2,      label: 'Performance & Records' },
   { key: 'analysis',    Icon: BarChart3,      label: 'Test analysis' },
+  { key: 'weaktopics',  Icon: Brain,         label: 'Weak Topics' },
 ];
 
 const SUBJECT_COLORS = ['#1a4fa0', '#e86b1f', '#1a8a4a', '#7c3aed', '#f5a623'];
@@ -488,6 +490,7 @@ export default function StudentDashboard() {
           {activePage === 'profile'     && <ProfileTab />}
           {activePage === 'performance' && <PerformanceTab />}
           {activePage === 'analysis'    && <AnalysisTab />}
+          {activePage === 'weaktopics'  && <StudentWeakTopics studentId={auth.id} />}
         </div>
       </div>
     </div>

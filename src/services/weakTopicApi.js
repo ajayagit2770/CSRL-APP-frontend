@@ -1,0 +1,107 @@
+// ============================================================
+// weakTopicApi.js — API service for weak topic feature
+//
+// Follows the same pattern as dataService.js:
+//   - Reads JWT from localStorage automatically
+//   - Uses VITE_API_BASE_URL env var
+//   - Handles multipart form data for file uploads
+// ============================================================
+
+const TOKEN_KEY = 'csrl_token';
+
+function resolveApiBase() {
+  const envBase = String(import.meta.env.VITE_API_BASE_URL || '').trim();
+  if (envBase) return envBase.replace(/\/$/, '');
+
+  if (typeof window !== 'undefined') {
+    const proto = window.location.protocol;
+    const host  = window.location.hostname;
+    if (proto === 'capacitor:' || proto === 'ionic:' || proto === 'file:') {
+      return 'https://csrl-app-backed.onrender.com';
+    }
+    if (host.endsWith('.vercel.app') || host !== 'localhost') {
+      return 'https://csrl-app-backed.onrender.com';
+    }
+  }
+
+  return '';
+}
+
+const BASE = resolveApiBase();
+
+function getToken() {
+  return localStorage.getItem(TOKEN_KEY);
+}
+
+function authHeaders() {
+  const token = getToken();
+  return token ? { Authorization: `Bearer ${token}` } : {};
+}
+
+async function handleResponse(res) {
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}));
+    throw new Error(err.message || `API error (${res.status})`);
+  }
+  return res.json();
+}
+
+/**
+ * getStudentWeakTopics — fetch weak topic data for a student.
+ * If testId provided: returns single doc or {}.
+ * If not provided: returns array sorted by testId.
+ */
+export async function getStudentWeakTopics(studentId, testId = null) {
+  let url = `${BASE}/api/student/weak-topics/${encodeURIComponent(studentId)}`;
+  const params = new URLSearchParams();
+  if (testId) params.set('testId', testId);
+  const qs = params.toString();
+  if (qs) url += `?${qs}&_t=${Date.now()}`;
+  else url += `?_t=${Date.now()}`;
+
+  const res = await fetch(url, { headers: authHeaders() });
+  return handleResponse(res);
+}
+
+/**
+ * getCenterWeakTopics — fetch weak topic data for a center.
+ * If testId provided: returns single doc or {}.
+ * If not provided: returns array sorted by testId.
+ */
+export async function getCenterWeakTopics(centerId, testId = null) {
+  let url = `${BASE}/api/center/weak-topics/${encodeURIComponent(centerId)}`;
+  const params = new URLSearchParams();
+  if (testId) params.set('testId', testId);
+  const qs = params.toString();
+  if (qs) url += `?${qs}&_t=${Date.now()}`;
+  else url += `?_t=${Date.now()}`;
+
+  const res = await fetch(url, { headers: authHeaders() });
+  return handleResponse(res);
+}
+
+/**
+ * uploadTopicMap — upload a Topic Map CSV for admin.
+ * @param {FormData} formData - fields: testId, paper, paperCount, file
+ */
+export async function uploadTopicMap(formData) {
+  const res = await fetch(`${BASE}/api/admin/weak-topics/upload-topic-map`, {
+    method:  'POST',
+    headers: authHeaders(), // Do NOT set Content-Type — browser sets multipart boundary
+    body:    formData,
+  });
+  return handleResponse(res);
+}
+
+/**
+ * uploadMarks — upload a Marks Awarded CSV for admin.
+ * @param {FormData} formData - fields: testId, paper, paperCount, file
+ */
+export async function uploadMarks(formData) {
+  const res = await fetch(`${BASE}/api/admin/weak-topics/upload-marks`, {
+    method:  'POST',
+    headers: authHeaders(),
+    body:    formData,
+  });
+  return handleResponse(res);
+}

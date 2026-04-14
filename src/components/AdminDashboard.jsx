@@ -5,7 +5,7 @@ import {
   ShieldCheck, Plus, Upload, Download, Package, Pencil, Trash2,
   Search, TrendingUp, TrendingDown, LayoutDashboard, BarChart2,
   Lightbulb, Loader2, CheckCircle2,
-  Eye, BarChart3,
+  Eye, BarChart3, Brain,
 } from 'lucide-react';
 import * as XLSX from 'xlsx';
 import {
@@ -29,6 +29,7 @@ import StudentFormModal from './StudentFormModal';
 import TestDataModal from './TestDataModal';
 import CentreLeaderboard from './CentreLeaderboard';
 import TestInsightsPanel from './TestInsightsPanel';
+import AdminWeakTopics from './AdminWeakTopics';
 
 // ── Constants ─────────────────────────────────────────────────────────────────
 
@@ -48,6 +49,7 @@ const TABS = [
   { key: 'students',    Icon: Users,           label: 'Students'           },
   { key: 'marks',       Icon: FileText,        label: 'Test Marks'         },
   { key: 'import',      Icon: Upload,          label: 'Import / Export'    },
+  { key: 'weaktopics',  Icon: Brain,           label: 'Weak Topics'        },
 ];
 
 // ── Helpers ────────────────────────────────────────────────────────────────────
@@ -1240,6 +1242,7 @@ export default function AdminDashboard() {
           {activePage === 'marks'       && <MarksSection />}
           {activePage === 'import'      && <ImportExportSection />}
           {activePage === 'ranking'     && <RankingsSection />}
+          {activePage === 'weaktopics'  && <AdminWeakTopics />}
           {activePage === 'insights' && (
             <TestInsightsPanel
               insights={testInsights}
