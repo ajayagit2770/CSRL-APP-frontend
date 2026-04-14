@@ -632,10 +632,9 @@ input, select, textarea {
   
   /* Truncate the student name so it doesn't push columns horizontally */
   .table-compact td:nth-child(2) .student-row > div:nth-child(2) > div:first-child {
-    max-width: 85px;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+    max-width: 110px;
+    white-space: normal;
+    overflow-wrap: anywhere;
   }
 
   .table-compact th:nth-child(3),

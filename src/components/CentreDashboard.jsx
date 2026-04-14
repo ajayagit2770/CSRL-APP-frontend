@@ -412,8 +412,17 @@ export default function CentreDashboard() {
           All students rankwise — {selectedTestKey}
         </div>
         <div className="table-wrap" style={{ maxHeight: 440, overflowY: 'auto' }}>
-          <table className="table">
-            <thead><tr><th>Rank</th><th>Student</th><th>Stream</th><th>Total</th></tr></thead>
+          <table className="table table-compact">
+            <thead>
+              <tr>
+                <th>Rank</th><th>Student</th><th>Stream</th>
+                {rankingSubjects.map((s) => {
+                  const abbr = s === 'Physics' ? 'P' : s === 'Chemistry' ? 'C' : (s === 'Math' || s === 'Mathematics') ? 'M' : s === 'Biology' ? 'B' : s.substring(0, 3);
+                  return <th key={s} title={s}>{abbr}</th>;
+                })}
+                <th>Total</th>
+              </tr>
+            </thead>
             <tbody>
               {allRanked.map((s) => {
                 const profile = profileByRoll.get(s.roll);
@@ -436,6 +445,15 @@ export default function CentreDashboard() {
                       {s.stream || 'JEE'}
                     </span>
                   </td>
+                  {rankingSubjectCols.map((col) => {
+                    const raw = data?.tests?.find(t => t.ROLL_KEY === s.roll)?.[col];
+                    const val = (raw === undefined || raw === null || raw === '') ? '—' : raw;
+                    return (
+                      <td key={col} style={{ color: val === '—' ? 'var(--gray-200)' : 'inherit' }}>
+                        {val}
+                      </td>
+                    );
+                  })}
                   <td><strong style={{ color: '#1a4fa0' }}>{s.marks}</strong></td>
                 </tr>
               )})}
