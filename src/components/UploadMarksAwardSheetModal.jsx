@@ -16,7 +16,7 @@ function StatusIcon({ status, error }) {
   return null;
 }
 
-export default function UploadMarksAwardSheetModal({ onClose }) {
+export default function UploadMarksAwardSheetModal({ onClose, testOptions = [] }) {
   const [testId,      setTestId]      = useState('');
   const [paperCount,  setPaperCount]  = useState(2); // 1 or 2
 
@@ -140,11 +140,17 @@ export default function UploadMarksAwardSheetModal({ onClose }) {
               <input
                 className="input"
                 type="text"
-                placeholder="e.g. CAT5"
+                placeholder="e.g. CAT-1(TEST)"
                 value={testId}
                 onChange={(e) => setTestId(e.target.value)}
+                list="test-list-options"
                 style={{ marginTop: 4 }}
               />
+              <datalist id="test-list-options">
+                {testOptions.map((opt) => (
+                  <option key={opt} value={opt} />
+                ))}
+              </datalist>
             </div>
             <div style={{ minWidth: 150 }}>
               <label className="label" style={{ fontSize: 12, fontWeight: 700 }}>

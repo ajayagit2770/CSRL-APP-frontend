@@ -10,7 +10,7 @@ import WeakTopicCard from './WeakTopicCard';
 
 const SUBJECTS = ['Physics', 'Chemistry', 'Mathematics'];
 
-export default function CenterWeakTopics({ centerId }) {
+export default function CenterWeakTopics({ centerId, activeTestKey }) {
   const [results,      setResults]      = useState([]); // array of CenterWeakTopics docs
   const [selectedTest, setSelectedTest] = useState('');
   const [loading,      setLoading]      = useState(true);
@@ -81,7 +81,8 @@ export default function CenterWeakTopics({ centerId }) {
   }
 
   const testList    = results.map((r) => r.testId);
-  const currentDoc  = results.find((r) => r.testId === selectedTest);
+  const resolvedTest = activeTestKey || selectedTest;
+  const currentDoc  = results.find((r) => r.testId === resolvedTest);
   const weakTopics  = currentDoc?.weakTopics || {};
 
   return (
@@ -90,7 +91,7 @@ export default function CenterWeakTopics({ centerId }) {
       <div className="card" style={{ padding: '12px 16px' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: 10, marginBottom: 10 }}>
           <div style={{ fontSize: 12, fontWeight: 700, color: 'var(--gray-600)', textTransform: 'uppercase', letterSpacing: 0.5 }}>
-            Select Test
+            {activeTestKey ? `Test: ${activeTestKey}` : 'Select Test'}
           </div>
           {currentDoc && (
             <div style={{
@@ -109,28 +110,30 @@ export default function CenterWeakTopics({ centerId }) {
             </div>
           )}
         </div>
-        <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
-          {testList.map((testId) => (
-            <button
-              key={testId}
-              type="button"
-              onClick={() => setSelectedTest(testId)}
-              style={{
-                padding:      '6px 14px',
-                borderRadius: 999,
-                border:       selectedTest === testId ? '2px solid var(--csrl-blue)' : '1px solid var(--gray-200)',
-                background:   selectedTest === testId ? 'var(--csrl-blue-light)' : '#fff',
-                color:        selectedTest === testId ? 'var(--csrl-blue)' : 'var(--gray-600)',
-                fontWeight:   selectedTest === testId ? 700 : 500,
-                fontSize:     13,
-                cursor:       'pointer',
-                transition:   'all 0.15s',
-              }}
-            >
-              {testId}
-            </button>
-          ))}
-        </div>
+        {!activeTestKey && (
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
+            {testList.map((testId) => (
+              <button
+                key={testId}
+                type="button"
+                onClick={() => setSelectedTest(testId)}
+                style={{
+                  padding:      '6px 14px',
+                  borderRadius: 999,
+                  border:       selectedTest === testId ? '2px solid var(--csrl-blue)' : '1px solid var(--gray-200)',
+                  background:   selectedTest === testId ? 'var(--csrl-blue-light)' : '#fff',
+                  color:        selectedTest === testId ? 'var(--csrl-blue)' : 'var(--gray-600)',
+                  fontWeight:   selectedTest === testId ? 700 : 500,
+                  fontSize:     13,
+                  cursor:       'pointer',
+                  transition:   'all 0.15s',
+                }}
+              >
+                {testId}
+              </button>
+            ))}
+          </div>
+        )}
       </div>
 
       {/* Legend */}
