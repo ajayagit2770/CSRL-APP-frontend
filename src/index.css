@@ -618,6 +618,18 @@ input, select, textarea {
   .toast { justify-content: center; text-align: center; }
   .table th,
   .table td { padding: 8px 10px; font-size: 13px; }
+  .table-compact th, 
+  .table-compact td { padding: 2px 4px !important; font-size: 11px !important; }
+  .table-compact th:nth-child(2),
+  .table-compact td:nth-child(2) {
+    max-width: 120px;
+    white-space: normal;
+  }
+  .table-compact .student-row .avatar {
+     width: 28px !important;
+     height: 28px !important;
+     font-size: 10px !important;
+  }
   .centre-rank-card {
     flex-wrap: wrap;
     padding: 14px;
