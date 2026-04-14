@@ -632,14 +632,21 @@ input, select, textarea {
   .table-compact th:nth-child(2),
   .table-compact td:nth-child(2) {
     width: auto;
-    white-space: normal;
+    min-width: 90px;
   }
   
   .table-compact td:nth-child(2) .student-row > div:nth-child(2) > div:first-child {
-    max-width: 140px;
+    max-width: 90px;
     white-space: normal;
     word-break: normal;
     word-wrap: normal;
+    line-height: 1.2;
+  }
+
+  /* Force the table to be wider than the phone screen to enable 'left slide' horizontal scrolling */
+  .table-wrap .table-compact {
+    min-width: 580px;
+    width: 100%;
   }
 
   
