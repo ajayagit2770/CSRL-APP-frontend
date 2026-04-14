@@ -160,6 +160,14 @@ input, select, textarea {
   background: var(--gray-50);
 }
 
+.table-compact th, .table-compact td {
+  padding: 6px 8px;
+  font-size: 11px;
+}
+.table-compact th {
+  white-space: nowrap;
+}
+
 .tbl .rank-gold { color: #d97706; font-weight: 800; }
 .tbl .rank-silver { color: var(--gray-600); font-weight: 700; }
 .tbl .rank-bronze { color: var(--csrl-orange); font-weight: 700; }

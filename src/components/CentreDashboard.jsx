@@ -7,6 +7,8 @@ import {
   fetchRankings,
   fetchSubjectAverages,
   fetchTestInsights,
+  parseTestColumn,
+  resolveStudentPhotoUrl,
 } from '../services/dataService';
 import { useAuth } from '../context/AuthContext';
 import StudentProfileView from './StudentProfileView';
@@ -129,6 +131,22 @@ export default function CentreDashboard() {
       .sort((a, b) => String(b).localeCompare(String(a), undefined, { numeric: true, sensitivity: 'base' })),
     [data]
   );
+
+  const rankingSubjectCols = useMemo(() => {
+    if (!data?.testColumns) return [];
+    return data.testColumns.filter((col) => {
+      const meta = parseTestColumn(col);
+      return meta.testName === selectedTestKey && !meta.isTotal;
+    });
+  }, [data, selectedTestKey]);
+
+  const rankingSubjects = useMemo(() => rankingSubjectCols.map(c => parseTestColumn(c).subject), [rankingSubjectCols]);
+
+  const profileByRoll = useMemo(() => {
+    const map = new Map();
+    (data?.profiles || []).forEach((p) => map.set(p.ROLL_KEY, p));
+    return map;
+  }, [data]);
 
   const filteredStudents = useMemo(() => {
     if (!data) return [];
@@ -275,31 +293,48 @@ export default function CentreDashboard() {
           Top 30 — {selectedTestKey}
         </div>
         <div className="table-wrap">
-        <table className="table">
-          <thead><tr><th>#</th><th>Student</th><th>Stream</th><th>Total</th></tr></thead>
+        <table className="table table-compact">
+          <thead>
+            <tr>
+              <th>#</th><th>Student</th>
+              {rankingSubjects.map((s) => {
+                const abbr = s === 'Physics' ? 'P' : s === 'Chemistry' ? 'C' : (s === 'Math' || s === 'Mathematics') ? 'M' : s === 'Biology' ? 'B' : s.substring(0, 3);
+                return <th key={s} title={s}>{abbr}</th>;
+              })}
+              <th>Total</th>
+            </tr>
+          </thead>
           <tbody>
             {topRanked.map((s) => {
+              const testDoc = data?.tests?.find(t => t.ROLL_KEY === s.roll) || {};
               const rankColor = s.rank === 1 ? '#d97706' : s.rank === 2 ? '#6b7280' : s.rank === 3 ? '#c2410c' : 'inherit';
               return (
                 <tr key={s.roll} style={{ cursor: 'pointer' }} onClick={() => setViewingStudentId(s.roll)}>
                   <td><span style={{ fontWeight: 800, color: rankColor }}>{s.rank}</span></td>
                   <td>
                     <div className="student-row">
-                      <div className="avatar">{getInitials(s.name)}</div>
-                      <span style={{ fontWeight: 600, fontSize: 13 }}>{s.name}</span>
+                      <div className="avatar" style={{width: 32, height: 32, fontSize: 12}}>{getInitials(s.name)}</div>
+                      <div>
+                        <div style={{ fontWeight: 600, fontSize: 12 }}>{s.name}</div>
+                        <div style={{ fontSize: 10, color: 'var(--gray-400)' }}>{s.roll}</div>
+                      </div>
                     </div>
                   </td>
-                  <td>
-                    <span style={{ fontSize: 11, padding: '2px 6px', borderRadius: 3, background: s.stream === 'NEET' ? '#e6f5ed' : '#e8f0fc', color: s.stream === 'NEET' ? '#1a6e3b' : '#1a4fa0', fontWeight: 600 }}>
-                      {s.stream || 'JEE'}
-                    </span>
-                  </td>
+                  {rankingSubjectCols.map((col, idx) => {
+                    const raw = testDoc[col];
+                    const val = (raw === undefined || raw === null || raw === '') ? '—' : raw;
+                    return (
+                      <td key={col} style={{ color: val === '—' ? 'var(--gray-200)' : 'inherit' }}>
+                        {val}
+                      </td>
+                    );
+                  })}
                   <td><strong style={{ color: '#1a4fa0' }}>{s.marks}</strong></td>
                 </tr>
               );
             })}
             {!topRanked.length && (
-              <tr><td colSpan={4} style={{ textAlign: 'center', color: 'var(--gray-400)', padding: 20 }}>No data for {selectedTestKey}</td></tr>
+              <tr><td colSpan={rankingSubjects.length + 3} style={{ textAlign: 'center', color: 'var(--gray-400)', padding: 20 }}>No data for {selectedTestKey}</td></tr>
             )}
           </tbody>
         </table>
@@ -312,23 +347,46 @@ export default function CentreDashboard() {
           Bottom 30 — {selectedTestKey}
         </div>
         <div className="table-wrap">
-        <table className="table">
-          <thead><tr><th>Rank</th><th>Student</th><th>Total</th></tr></thead>
+        <table className="table table-compact">
+          <thead>
+            <tr>
+              <th>Rank</th><th>Student</th>
+              {rankingSubjects.map((s) => {
+                const abbr = s === 'Physics' ? 'P' : s === 'Chemistry' ? 'C' : (s === 'Math' || s === 'Mathematics') ? 'M' : s === 'Biology' ? 'B' : s.substring(0, 3);
+                return <th key={s} title={s}>{abbr}</th>;
+              })}
+              <th>Total</th>
+            </tr>
+          </thead>
           <tbody>
-            {bottomRanked.map((s) => (
+            {bottomRanked.map((s) => {
+              const testDoc = data?.tests?.find(t => t.ROLL_KEY === s.roll) || {};
+              return (
               <tr key={s.roll} style={{ cursor: 'pointer' }} onClick={() => setViewingStudentId(s.roll)}>
                 <td style={{ color: 'var(--red)', fontWeight: 700 }}>#{s.rank}</td>
                 <td>
                   <div className="student-row">
-                    <div className="avatar" style={{ background: '#fdecea', color: 'var(--red)' }}>{getInitials(s.name)}</div>
-                    <span style={{ fontWeight: 600, fontSize: 13 }}>{s.name}</span>
+                    <div className="avatar" style={{ background: '#fdecea', color: 'var(--red)', width: 32, height: 32, fontSize: 12 }}>{getInitials(s.name)}</div>
+                    <div>
+                      <div style={{ fontWeight: 600, fontSize: 12 }}>{s.name}</div>
+                      <div style={{ fontSize: 10, color: 'var(--gray-400)' }}>{s.roll}</div>
+                    </div>
                   </div>
                 </td>
+                {rankingSubjectCols.map((col, idx) => {
+                  const raw = testDoc[col];
+                  const val = (raw === undefined || raw === null || raw === '') ? '—' : raw;
+                  return (
+                    <td key={col} style={{ color: val === '—' ? 'var(--gray-200)' : 'inherit' }}>
+                      {val}
+                    </td>
+                  );
+                })}
                 <td><strong style={{ color: 'var(--red)' }}>{s.marks}</strong></td>
               </tr>
-            ))}
+            )})}
             {!bottomRanked.length && (
-              <tr><td colSpan={3} style={{ textAlign: 'center', color: 'var(--gray-400)', padding: 20 }}>No data</td></tr>
+              <tr><td colSpan={rankingSubjects.length + 3} style={{ textAlign: 'center', color: 'var(--gray-400)', padding: 20 }}>No data</td></tr>
             )}
           </tbody>
         </table>
@@ -345,12 +403,19 @@ export default function CentreDashboard() {
           <table className="table">
             <thead><tr><th>Rank</th><th>Student</th><th>Stream</th><th>Total</th></tr></thead>
             <tbody>
-              {allRanked.map((s) => (
+              {allRanked.map((s) => {
+                const profile = profileByRoll.get(s.roll);
+                const photoUrl = profile?.['STUDENT PHOTO URL'] ? resolveStudentPhotoUrl(profile['STUDENT PHOTO URL'], 'fallback') : null;
+                return (
                 <tr key={`all-${s.roll}`} style={{ cursor: 'pointer' }} onClick={() => setViewingStudentId(s.roll)}>
                   <td><strong>#{s.rank}</strong></td>
                   <td>
                     <div className="student-row">
-                      <div className="avatar">{getInitials(s.name)}</div>
+                      {photoUrl ? (
+                        <img src={photoUrl} alt="Avatar" className="avatar" style={{width: 32, height: 32, fontSize: 12, objectFit: 'cover'}} />
+                      ) : (
+                        <div className="avatar" style={{width: 32, height: 32, fontSize: 12}}>{getInitials(s.name)}</div>
+                      )}
                       <span style={{ fontWeight: 600, fontSize: 13 }}>{s.name}</span>
                     </div>
                   </td>
@@ -361,7 +426,7 @@ export default function CentreDashboard() {
                   </td>
                   <td><strong style={{ color: '#1a4fa0' }}>{s.marks}</strong></td>
                 </tr>
-              ))}
+              )})}
               {!allRanked.length && (
                 <tr><td colSpan={4} style={{ textAlign: 'center', color: 'var(--gray-400)', padding: 20 }}>No data for {selectedTestKey}</td></tr>
               )}
@@ -394,12 +459,18 @@ export default function CentreDashboard() {
           <tr><th>Roll</th><th>Name</th><th>Stream</th><th>Category</th><th>Mobile</th><th>Actions</th></tr>
         </thead>
         <tbody>
-          {filteredStudents.map((s) => (
+          {filteredStudents.map((s) => {
+            const photoUrl = s['STUDENT PHOTO URL'] ? resolveStudentPhotoUrl(s['STUDENT PHOTO URL'], 'fallback') : null;
+            return (
             <tr key={s.ROLL_KEY} style={{ cursor: 'pointer' }} onClick={() => setViewingStudentId(s.ROLL_KEY)}>
               <td><strong style={{ color: '#1a4fa0' }}>{s.ROLL_KEY}</strong></td>
               <td>
                 <div className="student-row">
-                  <div className="avatar">{getInitials(s["STUDENT'S NAME"])}</div>
+                  {photoUrl ? (
+                    <img src={photoUrl} alt="Avatar" className="avatar" style={{width: 32, height: 32, fontSize: 12, objectFit: 'cover'}} />
+                  ) : (
+                    <div className="avatar" style={{width: 32, height: 32, fontSize: 12}}>{getInitials(s["STUDENT'S NAME"])}</div>
+                  )}
                   <strong>{s["STUDENT'S NAME"]}</strong>
                 </div>
               </td>
@@ -421,7 +492,7 @@ export default function CentreDashboard() {
                 </button>
               </td>
             </tr>
-          ))}
+          )})}
           {!filteredStudents.length && (
             <tr><td colSpan={5} style={{ textAlign: 'center', padding: 24, color: 'var(--gray-400)' }}>No students found.</td></tr>
           )}

@@ -21,6 +21,7 @@ import {
   parseTestColumn,
   getJeePercentile,
   getStreamConfig,
+  resolveStudentPhotoUrl,
 } from '../services/dataService';
 import { useToast } from '../context/ToastContext';
 import StudentProfileView from './StudentProfileView';
@@ -783,12 +784,18 @@ export default function AdminDashboard() {
             <tr><th>Roll</th><th>Name</th><th>Centre</th><th>Stream</th><th>Category</th><th>Mobile</th><th>Class 10</th><th>Actions</th></tr>
           </thead>
           <tbody>
-            {filteredStudents.map((s) => (
+            {filteredStudents.map((s) => {
+              const photoUrl = s['STUDENT PHOTO URL'] ? resolveStudentPhotoUrl(s['STUDENT PHOTO URL'], 'fallback') : null;
+              return (
               <tr key={s.ROLL_KEY}>
                 <td><strong style={{ color: '#1a4fa0' }}>{s.ROLL_KEY}</strong></td>
                 <td>
                   <div className="student-row">
-                    <div className="avatar">{getInitials(s["STUDENT'S NAME"])}</div>
+                    {photoUrl ? (
+                      <img src={photoUrl} alt="Avatar" className="avatar" style={{ objectFit: 'cover' }} />
+                    ) : (
+                      <div className="avatar">{getInitials(s["STUDENT'S NAME"])}</div>
+                    )}
                     <div>
                       <div style={{ fontWeight: 600, fontSize: 13 }}>{s["STUDENT'S NAME"]}</div>
                       <div style={{ fontSize: 11, color: 'var(--gray-400)' }}>{s.GENDER || '—'}</div>
@@ -821,7 +828,8 @@ export default function AdminDashboard() {
                   </div>
                 </td>
               </tr>
-            ))}
+            );
+            })}
             {!filteredStudents.length && (
               <tr><td colSpan={8} style={{ textAlign: 'center', padding: 24, color: 'var(--gray-400)' }}>No students found.</td></tr>
             )}
@@ -856,11 +864,14 @@ export default function AdminDashboard() {
         </select>
       </div>
       <div className="table-wrap">
-        <table className="table">
+        <table className="table table-compact">
           <thead>
             <tr>
               <th>Roll</th><th>Name</th><th>Centre</th><th>Stream</th><th>Test</th>
-              {allSubjects.map((s) => <th key={s}>{s}</th>)}
+              {allSubjects.map((s) => {
+                const abbr = s === 'Physics' ? 'P' : s === 'Chemistry' ? 'C' : (s === 'Math' || s === 'Mathematics') ? 'M' : s === 'Biology' ? 'B' : s.substring(0, 3);
+                return <th key={s} title={s}>{abbr}</th>;
+              })}
               <th>Total</th><th>%</th>
             </tr>
           </thead>
@@ -904,37 +915,51 @@ export default function AdminDashboard() {
         <TrendingUp size={15} aria-hidden="true" />Top 30 — {selectedTestKey}
       </div>
       <div className="table-wrap">
-      <table className="table">
-        <thead><tr><th>#</th><th>Student</th><th>Centre</th><th>Stream</th><th>Cat</th><th>Score</th></tr></thead>
+      <table className="table table-compact">
+        <thead>
+          <tr>
+            <th>#</th><th>Student</th><th>Centre</th>
+            {allSubjects.map((s) => {
+              const abbr = s === 'Physics' ? 'P' : s === 'Chemistry' ? 'C' : (s === 'Math' || s === 'Mathematics') ? 'M' : s === 'Biology' ? 'B' : s.substring(0, 3);
+              return <th key={s} title={s}>{abbr}</th>;
+            })}
+            <th>Total</th>
+          </tr>
+        </thead>
         <tbody>
           {topRanked.map((m) => {
             const profile   = profileByRoll.get(m.roll);
+            const flatM = flatMarks.find(f => f.roll === m.roll && f.test === selectedTestKey) || { subjects: {} };
+            const photoUrl = profile?.['STUDENT PHOTO URL'] ? resolveStudentPhotoUrl(profile['STUDENT PHOTO URL'], 'fallback') : null;
             const rankColor = m.rank === 1 ? '#d97706' : m.rank === 2 ? '#6b7280' : m.rank === 3 ? '#c2410c' : 'inherit';
             return (
               <tr key={m.roll} style={{ cursor: 'pointer' }} onClick={() => setViewingStudentId(m.roll)}>
                 <td><span style={{ fontWeight: 800, color: rankColor }}>{m.rank}</span></td>
                 <td>
                   <div className="student-row">
-                    <div className="avatar">{getInitials(m.name)}</div>
+                    {photoUrl ? (
+                      <img src={photoUrl} alt="Avatar" className="avatar" style={{width: 32, height: 32, fontSize: 12, objectFit: 'cover'}} />
+                    ) : (
+                      <div className="avatar" style={{width: 32, height: 32, fontSize: 12}}>{getInitials(m.name)}</div>
+                    )}
                     <div>
-                      <div style={{ fontWeight: 600, fontSize: 13 }}>{m.name}</div>
-                      <div style={{ fontSize: 11, color: 'var(--gray-400)' }}>{m.roll}</div>
+                      <div style={{ fontWeight: 600, fontSize: 12 }}>{m.name}</div>
+                      <div style={{ fontSize: 10, color: 'var(--gray-400)' }}>{m.roll}</div>
                     </div>
                   </div>
                 </td>
-                <td><span className="badge" style={{ background: '#e8f0fc', color: '#1a4fa0' }}>{m.center}</span></td>
-                <td>
-                  <span style={{ fontSize: 11, padding: '2px 5px', borderRadius: 3, background: m.stream === 'NEET' ? '#e6f5ed' : '#e8f0fc', color: m.stream === 'NEET' ? '#1a6e3b' : '#1a4fa0', fontWeight: 700 }}>
-                    {m.stream || 'JEE'}
-                  </span>
-                </td>
-                <td><span className={`badge badge-${(profile?.CATEGORY || 'general').toLowerCase()}`}>{profile?.CATEGORY || '—'}</span></td>
-                <td><strong style={{ fontSize: 15, color: '#1a4fa0' }}>{m.marks}</strong></td>
+                <td><span className="badge" style={{ background: '#e8f0fc', color: '#1a4fa0', fontSize: 10 }}>{m.center}</span></td>
+                {allSubjects.map((sub) => (
+                  <td key={sub} style={{ color: flatM.subjects[sub] === undefined ? 'var(--gray-200)' : 'inherit' }}>
+                    {flatM.subjects[sub] ?? '—'}
+                  </td>
+                ))}
+                <td><strong style={{ fontSize: 13, color: '#1a4fa0' }}>{m.marks}</strong></td>
               </tr>
             );
           })}
           {!topRanked.length && (
-            <tr><td colSpan={6} style={{ textAlign: 'center', padding: 24, color: 'var(--gray-400)' }}>No data for {selectedTestKey}.</td></tr>
+            <tr><td colSpan={allSubjects.length + 4} style={{ textAlign: 'center', padding: 24, color: 'var(--gray-400)' }}>No data for {selectedTestKey}.</td></tr>
           )}
         </tbody>
       </table>
@@ -948,27 +973,49 @@ export default function AdminDashboard() {
         <TrendingDown size={15} aria-hidden="true" />Bottom 30 — {selectedTestKey}
       </div>
       <div className="table-wrap">
-      <table className="table">
-        <thead><tr><th>Rank</th><th>Student</th><th>Centre</th><th>Score</th></tr></thead>
+      <table className="table table-compact">
+        <thead>
+          <tr>
+            <th>Rank</th><th>Student</th><th>Centre</th>
+            {allSubjects.map((s) => {
+              const abbr = s === 'Physics' ? 'P' : s === 'Chemistry' ? 'C' : (s === 'Math' || s === 'Mathematics') ? 'M' : s === 'Biology' ? 'B' : s.substring(0, 3);
+              return <th key={s} title={s}>{abbr}</th>;
+            })}
+            <th>Total</th>
+          </tr>
+        </thead>
         <tbody>
-          {bottomRanked.map((m) => (
+          {bottomRanked.map((m) => {
+            const profile = profileByRoll.get(m.roll);
+            const flatM = flatMarks.find(f => f.roll === m.roll && f.test === selectedTestKey) || { subjects: {} };
+            const photoUrl = profile?.['STUDENT PHOTO URL'] ? resolveStudentPhotoUrl(profile['STUDENT PHOTO URL'], 'fallback') : null;
+            return (
             <tr key={m.roll} style={{ cursor: 'pointer' }} onClick={() => setViewingStudentId(m.roll)}>
               <td style={{ color: 'var(--red)', fontWeight: 700 }}>#{m.rank}</td>
               <td>
                 <div className="student-row">
-                  <div className="avatar" style={{ background: '#fdecea', color: 'var(--red)' }}>{getInitials(m.name)}</div>
+                  {photoUrl ? (
+                    <img src={photoUrl} alt="Avatar" className="avatar" style={{width: 32, height: 32, fontSize: 12, objectFit: 'cover'}} />
+                  ) : (
+                    <div className="avatar" style={{ background: '#fdecea', color: 'var(--red)', width: 32, height: 32, fontSize: 12 }}>{getInitials(m.name)}</div>
+                  )}
                   <div>
-                    <div style={{ fontWeight: 600, fontSize: 13 }}>{m.name}</div>
-                    <div style={{ fontSize: 11, color: 'var(--gray-400)' }}>{m.roll}</div>
+                    <div style={{ fontWeight: 600, fontSize: 12 }}>{m.name}</div>
+                    <div style={{ fontSize: 10, color: 'var(--gray-400)' }}>{m.roll}</div>
                   </div>
                 </div>
               </td>
-              <td>{m.center}</td>
-              <td><strong style={{ color: 'var(--red)' }}>{m.marks}</strong></td>
+              <td><span className="badge" style={{ background: '#e8f0fc', color: '#1a4fa0', fontSize: 10 }}>{m.center}</span></td>
+              {allSubjects.map((sub) => (
+                <td key={sub} style={{ color: flatM.subjects[sub] === undefined ? 'var(--gray-200)' : 'inherit' }}>
+                  {flatM.subjects[sub] ?? '—'}
+                </td>
+              ))}
+              <td><strong style={{ fontSize: 13, color: 'var(--red)' }}>{m.marks}</strong></td>
             </tr>
-          ))}
+          )})}
           {!bottomRanked.length && (
-            <tr><td colSpan={4} style={{ textAlign: 'center', padding: 24, color: 'var(--gray-400)' }}>No data for {selectedTestKey}.</td></tr>
+            <tr><td colSpan={allSubjects.length + 4} style={{ textAlign: 'center', padding: 24, color: 'var(--gray-400)' }}>No data for {selectedTestKey}.</td></tr>
           )}
         </tbody>
       </table>
