@@ -57,9 +57,9 @@ export default function CentreLeaderboard({ centreStats = [], selTest }) {
             <div style={{ flex: 1, minWidth: 0 }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 4, flexWrap: 'wrap' }}>
                 {centre.code.toUpperCase().includes('OIL') ? (
-                  <img src="/oil-logo.jpg" alt="OIL" style={{ height: 28, objectFit: 'contain' }} />
+                  <img src="/OIL_INDIA_logo.png" alt="OIL" style={{ height: 28, objectFit: 'contain' }} />
                 ) : centre.code.toUpperCase().includes('GAIL') ? (
-                  <img src="/gail-logo.jpg" alt="GAIL" style={{ height: 28, objectFit: 'contain' }} />
+                  <img src="/GAIL_logo.png" alt="GAIL" style={{ height: 28, objectFit: 'contain' }} />
                 ) : null}
                 <span style={{ fontWeight: 700, fontSize: 15 }}>{centreLabel(centre.code)}</span>
                 <span style={{ fontSize: 12, background: 'var(--csrl-blue-light)', color: 'var(--csrl-blue)', padding: '2px 8px', borderRadius: 4, fontWeight: 600 }}>
