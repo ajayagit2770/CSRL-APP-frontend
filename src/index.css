@@ -619,11 +619,35 @@ input, select, textarea {
   .table th,
   .table td { padding: 8px 10px; font-size: 13px; }
   .table-compact th, 
-  .table-compact td { padding: 2px 4px !important; font-size: 11px !important; }
+  .table-compact td { padding: 4px 6px !important; font-size: 11px !important; }
+  
+  .table-compact th:nth-child(1),
+  .table-compact td:nth-child(1) { width: 1%; white-space: nowrap; }
+
   .table-compact th:nth-child(2),
   .table-compact td:nth-child(2) {
-    max-width: 120px;
+    width: 1%;
     white-space: normal;
+  }
+  
+  /* Truncate the student name so it doesn't push columns horizontally */
+  .table-compact td:nth-child(2) .student-row > div:nth-child(2) > div:first-child {
+    max-width: 85px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .table-compact th:nth-child(3),
+  .table-compact td:nth-child(3) {
+    width: 1%;
+    white-space: nowrap;
+  }
+  
+  /* Make the centre badge highly compact */
+  .table-compact .badge {
+    padding: 2px 4px !important;
+    font-size: 9px !important;
   }
   .table-compact .student-row .avatar {
      width: 28px !important;
