@@ -949,13 +949,7 @@ export default function AdminDashboard() {
                   </div>
                 </td>
                 <td>
-                  {m.center?.toUpperCase().includes('OIL') ? (
-                    <img src="/oil-logo.jpg" alt={m.center} style={{ height: 26, objectFit: 'contain' }} title={m.center} />
-                  ) : m.center?.toUpperCase().includes('GAIL') ? (
-                    <img src="/gail-logo.jpg" alt={m.center} style={{ height: 26, objectFit: 'contain' }} title={m.center} />
-                  ) : (
-                    <span className="badge" style={{ background: '#e8f0fc', color: '#1a4fa0', fontSize: 10 }}>{m.center}</span>
-                  )}
+                  <span className="badge" style={{ background: '#e8f0fc', color: '#1a4fa0', fontSize: 10 }}>{m.center}</span>
                 </td>
                 {allSubjects.map((sub) => (
                   <td key={sub} style={{ color: flatM.subjects[sub] === undefined ? 'var(--gray-200)' : 'inherit' }}>
@@ -1014,13 +1008,7 @@ export default function AdminDashboard() {
                 </div>
               </td>
               <td>
-                {m.center?.toUpperCase().includes('OIL') ? (
-                  <img src="/oil-logo.jpg" alt={m.center} style={{ height: 26, objectFit: 'contain' }} title={m.center} />
-                ) : m.center?.toUpperCase().includes('GAIL') ? (
-                  <img src="/gail-logo.jpg" alt={m.center} style={{ height: 26, objectFit: 'contain' }} title={m.center} />
-                ) : (
-                  <span className="badge" style={{ background: '#e8f0fc', color: '#1a4fa0', fontSize: 10 }}>{m.center}</span>
-                )}
+                <span className="badge" style={{ background: '#e8f0fc', color: '#1a4fa0', fontSize: 10 }}>{m.center}</span>
               </td>
               {allSubjects.map((sub) => (
                 <td key={sub} style={{ color: flatM.subjects[sub] === undefined ? 'var(--gray-200)' : 'inherit' }}>
