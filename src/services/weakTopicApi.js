@@ -105,3 +105,21 @@ export async function uploadMarks(formData) {
   });
   return handleResponse(res);
 }
+
+/**
+ * getStudentOverallWeakTopics — fetch overall weak topic data for a student.
+ */
+export async function getStudentOverallWeakTopics(studentId) {
+  const url = `${BASE}/api/student/overall-weak-topics/${encodeURIComponent(studentId)}?_t=${Date.now()}`;
+  const res = await fetch(url, { headers: authHeaders() });
+  return handleResponse(res);
+}
+
+/**
+ * getCenterOverallWeakTopics — fetch overall weak topic data for a center.
+ */
+export async function getCenterOverallWeakTopics(centerId) {
+  const url = `${BASE}/api/center/overall-weak-topics/${encodeURIComponent(centerId)}?_t=${Date.now()}`;
+  const res = await fetch(url, { headers: authHeaders() });
+  return handleResponse(res);
+}

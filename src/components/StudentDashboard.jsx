@@ -16,6 +16,7 @@ import {
 import { useAuth } from '../context/AuthContext';
 import TestInsightsPanel from './TestInsightsPanel';
 import StudentWeakTopics from './StudentWeakTopics';
+import StudentOverallWeakTopics from './StudentOverallWeakTopics';
 
 const TABS = [
   { key: 'profile',     Icon: User,          label: 'Profile'     },
@@ -364,6 +365,7 @@ export default function StudentDashboard() {
         )}
       </div>
       <MarksTab />
+      <StudentOverallWeakTopics studentId={auth.id} />
     </div>
   );
 

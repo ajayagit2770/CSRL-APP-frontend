@@ -15,6 +15,7 @@ import StudentProfileView from './StudentProfileView';
 import { CENTERS } from '../config/centers';
 import TestInsightsPanel from './TestInsightsPanel';
 import CenterWeakTopics from './CenterWeakTopics';
+import CenterOverallWeakTopics from './CenterOverallWeakTopics';
 
 const TABS = [
   { key: 'overview',   Icon: LayoutDashboard, label: 'Overview'  },
@@ -282,6 +283,8 @@ export default function CentreDashboard() {
             })}
           </div>
         )}
+
+        <CenterOverallWeakTopics centerId={auth.centerCode} />
       </div>
     );
   };
