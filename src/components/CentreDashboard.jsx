@@ -603,7 +603,7 @@ export default function CentreDashboard() {
           )}
           {activePage === 'topbottom'  && <RankingsPair />}
           {activePage === 'students'   && <StudentsSection />}
-          {activePage === 'weaktopics' && <CenterWeakTopics centerId={auth.centerCode} />}
+          {activePage === 'weaktopics' && <CenterWeakTopics centerId={auth.centerCode} activeTestKey={selectedTestKey} />}
         </div>
       </div>
     </div>
