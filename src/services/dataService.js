@@ -130,23 +130,21 @@ export function parseTestColumn(col) {
 const TOKEN_KEY = 'csrl_token';
 
 function resolveApiBase() {
-  const envBase = String(import.meta.env.VITE_API_BASE_URL || '').trim();
-  if (envBase) return envBase.replace(/\/$/, '');
+  const envBase = String(import.meta.env.VITE_API_BASE_URL || "").trim();
+  if (envBase) return envBase.replace(/\/$/, "");
 
-  if (typeof window !== 'undefined') {
-    const proto = window.location.protocol;
-    const host  = window.location.hostname;
-    // Capacitor uses capacitor:// or ionic:// scheme — always use the remote backend
-    if (proto === 'capacitor:' || proto === 'ionic:' || proto === 'file:') {
-      return 'https://csrl-app-backed.onrender.com/api';
+  if (typeof window !== "undefined") {
+    // Mobile app detection: Capacitor object exists or specific mobile schemes
+    if (!!window.Capacitor || window.location.protocol === "capacitor:" || window.location.protocol === "ionic:" || window.location.protocol === "file:") {
+      return "https://csrl-app-backed.onrender.com/api";
     }
-    // Vercel deployment or any non-localhost host
-    if (host.endsWith('.vercel.app') || host !== 'localhost') {
-      return 'https://csrl-app-backed.onrender.com/api';
+    // Production web deployment (Vercel) or built static files
+    if (window.location.hostname !== "localhost" || import.meta.env.PROD) {
+      return "https://csrl-app-backed.onrender.com/api";
     }
   }
 
-  return '/api';
+  return "/api";
 }
 
 const API_BASE = resolveApiBase();
