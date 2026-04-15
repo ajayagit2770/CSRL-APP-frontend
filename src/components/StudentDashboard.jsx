@@ -207,70 +207,74 @@ export default function StudentDashboard() {
   };
 
   const ProfileTab = () => (
-    <div className="grid-2">
-      <div className="card">
-        <div className="section-title">Personal Information</div>
-        {[
-          ['Name',     profile["STUDENT'S NAME"]],
-          ['Roll',     profile.ROLL_KEY],
-          ['Stream',   stream],
-          ['Gender',   profile.GENDER],
-          ['Category', profile.CATEGORY],
-          ['DOB',      profile['DATE OF BIRTH']],
-          ['Mobile',   profile['Mobile No.']],
-          ['Parent',   profile["FATHER'S NAME"]],
-          ['School',   schoolName],
-        ].map(([label, value]) => (
-          <div className="info-row" key={label}>
-            <span className="info-label">{label}</span>
-            <span className="info-val">{value || '—'}</span>
-          </div>
-        ))}
-      </div>
-
-      <div className="card">
-        <div className="section-title" style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-          <AlertTriangle size={14} color="var(--red)" aria-hidden="true" />
-          Weak subject (from your tests)
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+      <div className="grid-2">
+        <div className="card">
+          <div className="section-title">Personal Information</div>
+          {[
+            ['Name',     profile["STUDENT'S NAME"]],
+            ['Roll',     profile.ROLL_KEY],
+            ['Stream',   stream],
+            ['Gender',   profile.GENDER],
+            ['Category', profile.CATEGORY],
+            ['DOB',      profile['DATE OF BIRTH']],
+            ['Mobile',   profile['Mobile No.']],
+            ['Parent',   profile["FATHER'S NAME"]],
+            ['School',   schoolName],
+          ].map(([label, value]) => (
+            <div className="info-row" key={label}>
+              <span className="info-label">{label}</span>
+              <span className="info-val">{value || '\u2014'}</span>
+            </div>
+          ))}
         </div>
-        <div style={{ fontSize: 26, fontWeight: 800, color: 'var(--red)', marginBottom: 14 }}>{weakSubject}</div>
-        {streamCfg.subjects.map((sub) => {
-          const avg = chartData.length
-            ? Math.round(chartData.reduce((acc, m) => acc + (Number(m[sub]) || 0), 0) / chartData.length)
-            : 0;
-          const isWeak    = sub === weakSubject;
-          const fillColor = isWeak ? '#e74c3c' : subjectColor(sub);
-          const maxMark   = getMaxMarksForSubject(streamCfg, sub);
-          return (
-            <div key={sub} style={{ marginBottom: 10 }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 4, fontSize: 13 }}>
-                <span style={{ fontWeight: isWeak ? 700 : 400, color: isWeak ? 'var(--red)' : 'inherit' }}>
-                  {sub}
-                  {isWeak && <AlertTriangle size={12} style={{ marginLeft: 5 }} aria-hidden="true" />}
-                </span>
-                <span style={{ fontWeight: 600 }}>{avg}/{maxMark}</span>
-              </div>
-              <div className="progress-bar">
-                <div
-                  className="progress-fill"
-                  style={{ width: `${Math.min(100, Math.round((avg / maxMark) * 100))}%`, background: fillColor }}
-                />
-              </div>
-            </div>
-          );
-        })}
 
-        {examResult && (
-          <div style={{ marginTop: 16, padding: '10px 14px', background: stream === 'JEE' ? '#e8f0fc' : '#e6f5ed', borderRadius: 8 }}>
-            <div style={{ fontSize: 11, fontWeight: 700, color: 'var(--gray-600)', textTransform: 'uppercase', letterSpacing: 1 }}>
-              {stream === 'JEE' ? 'JEE Main Percentile' : 'NEET Score'}
-            </div>
-            <div style={{ fontSize: 22, fontWeight: 800, color: stream === 'JEE' ? '#1a4fa0' : '#1a6e3b', marginTop: 2 }}>
-              {examResult}
-            </div>
+        <div className="card">
+          <div className="section-title" style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+            <AlertTriangle size={14} color="var(--red)" aria-hidden="true" />
+            Weak subject (from your tests)
           </div>
-        )}
+          <div style={{ fontSize: 26, fontWeight: 800, color: 'var(--red)', marginBottom: 14 }}>{weakSubject}</div>
+          {streamCfg.subjects.map((sub) => {
+            const avg = chartData.length
+              ? Math.round(chartData.reduce((acc, m) => acc + (Number(m[sub]) || 0), 0) / chartData.length)
+              : 0;
+            const isWeak    = sub === weakSubject;
+            const fillColor = isWeak ? '#e74c3c' : subjectColor(sub);
+            const maxMark   = getMaxMarksForSubject(streamCfg, sub);
+            return (
+              <div key={sub} style={{ marginBottom: 10 }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 4, fontSize: 13 }}>
+                  <span style={{ fontWeight: isWeak ? 700 : 400, color: isWeak ? 'var(--red)' : 'inherit' }}>
+                    {sub}
+                    {isWeak && <AlertTriangle size={12} style={{ marginLeft: 5 }} aria-hidden="true" />}
+                  </span>
+                  <span style={{ fontWeight: 600 }}>{avg}/{maxMark}</span>
+                </div>
+                <div className="progress-bar">
+                  <div
+                    className="progress-fill"
+                    style={{ width: `${Math.min(100, Math.round((avg / maxMark) * 100))}%`, background: fillColor }}
+                  />
+                </div>
+              </div>
+            );
+          })}
+
+          {examResult && (
+            <div style={{ marginTop: 16, padding: '10px 14px', background: stream === 'JEE' ? '#e8f0fc' : '#e6f5ed', borderRadius: 8 }}>
+              <div style={{ fontSize: 11, fontWeight: 700, color: 'var(--gray-600)', textTransform: 'uppercase', letterSpacing: 1 }}>
+                {stream === 'JEE' ? 'JEE Main Percentile' : 'NEET Score'}
+              </div>
+              <div style={{ fontSize: 22, fontWeight: 800, color: stream === 'JEE' ? '#1a4fa0' : '#1a6e3b', marginTop: 2 }}>
+                {examResult}
+              </div>
+            </div>
+          )}
+        </div>
       </div>
+
+      <StudentOverallWeakTopics studentId={auth.id} />
     </div>
   );
 
@@ -365,7 +369,6 @@ export default function StudentDashboard() {
         )}
       </div>
       <MarksTab />
-      <StudentOverallWeakTopics studentId={auth.id} />
     </div>
   );
 
