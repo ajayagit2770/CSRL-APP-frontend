@@ -34,8 +34,8 @@ const CENTRE_NAV = [
   { key: 'overview',   Icon: LayoutDashboard, label: 'Overview'  },
   { key: 'topbottom',  Icon: Trophy,          label: 'Rankings'  },
   { key: 'insights',   Icon: BarChart3,       label: 'Test analysis' },
-  { key: 'students',   Icon: Users,           label: 'Students'  },
   { key: 'weaktopics', Icon: Brain,           label: 'Weak Topics' },
+  { key: 'students',   Icon: Users,           label: 'Students'  },
 ];
 
 const STUDENT_NAV = [
